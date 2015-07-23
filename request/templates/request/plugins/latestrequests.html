@@ -4,6 +4,7 @@
 
 {% block table %}
     <tr>
+        <th>{% trans "Host" %}</th>
         <th>{% trans "Path" %}</th>
         <th>{% trans "From" %}</th>
         <th>{% trans "Response" %}</th>
@@ -12,6 +13,7 @@
     
   {% for request in requests %}
     <tr>
+        <td><a href="../?path={{ request.host }}" title="{{ request.host }}">{{ request.path|trunc:"35" }}</a></td>
         <td><a href="../?path={{ request.path }}" title="{{ request.path }}">{{ request.path|trunc:"35" }}</a></td>
         <td>{% firstof request.get_user request.ip %}</td>
         <td>{{ request.get_response_display }}</td>

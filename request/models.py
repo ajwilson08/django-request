@@ -3,6 +3,7 @@ from socket import gethostbyaddr
 from django.db import models
 from django.conf import settings
 from django.contrib.auth import get_user_model
+from django.core.exceptions import DisallowedHost
 from django.utils.translation import ugettext_lazy as _
 
 from request.managers import RequestManager
@@ -19,6 +20,7 @@ class Request(models.Model):
 
     # Request infomation
     method = models.CharField(_('method'), default='GET', max_length=7)
+    host = models.CharField(_('path'), max_length=255)
     path = models.CharField(_('path'), max_length=255)
     time = models.DateTimeField(_('time'), auto_now_add=True)
 
@@ -40,7 +42,7 @@ class Request(models.Model):
         ordering = ('-time',)
 
     def __str__(self):
-        return '[%s] %s %s %s' % (self.time, self.method, self.path, self.response)
+        return '[%s] %s %s %s %s' % (self.time, self.method, self.host, self.path, self.response)
 
     def get_user(self):
         return get_user_model().objects.get(pk=self.user_id)
@@ -48,6 +50,11 @@ class Request(models.Model):
     def from_http_request(self, request, response=None, commit=True):
         # Request infomation
         self.method = request.method
+        try:
+            self.host = request.get_host()[:255]
+        except DisallowedHost:
+            self.host = None
+
         self.path = request.path[:255]
 
         self.is_secure = request.is_secure()
