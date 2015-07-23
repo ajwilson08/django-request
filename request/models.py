@@ -20,7 +20,7 @@ class Request(models.Model):
 
     # Request infomation
     method = models.CharField(_('method'), default='GET', max_length=7)
-    host = models.CharField(_('path'), max_length=255)
+    host = models.CharField(_('host'), max_length=255)
     path = models.CharField(_('path'), max_length=255)
     time = models.DateTimeField(_('time'), auto_now_add=True)
 

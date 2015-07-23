@@ -14,7 +14,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='request',
             name='host',
-            field=models.CharField(verbose_name='path', default='', max_length=255),
+            field=models.CharField(verbose_name='host', default='', max_length=255),
             preserve_default=False,
         ),
     ]
