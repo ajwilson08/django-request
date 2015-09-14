@@ -22,8 +22,8 @@ class RequestMiddleware(object):
         try:
             host = request.get_host()
         except DisallowedHost:
-            host = 'unknown'
-        if ignore.resolve(host):
+            host = None
+        if not host or ignore.resolve(host):
             return response
 
         if request.is_ajax() and settings.REQUEST_IGNORE_AJAX:
