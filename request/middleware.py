@@ -1,3 +1,4 @@
+from django.core.exceptions import DisallowedHost
 from django.core.urlresolvers import get_callable
 
 from request.models import Request
@@ -18,7 +19,11 @@ class RequestMiddleware(object):
             return response
 
         ignore = patterns(False, *settings.REQUEST_IGNORE_HOSTS)
-        if ignore.resolve(request.get_host()):
+        try:
+            host = request.get_host()
+        except DisallowedHost:
+            host = 'unknown'
+        if ignore.resolve(host):
             return response
 
         if request.is_ajax() and settings.REQUEST_IGNORE_AJAX:
